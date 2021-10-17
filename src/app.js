@@ -1,25 +1,31 @@
 const express = require('express');
+require('./db/conn');
+const Student = require("./models/students");
 //const mongoose = require('mongoose');
 const app = express();
-const port= process.env.PORT || 3001;
+const port = process.env.PORT || 3001;
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send(`Hello  world from the server`);
-});
+//create a new student
+//app.post('/students', (req, res) => {
+    //console.log(req.body);
+   // const user = new Student(req.body);
+ //user.save().then(() => {
+       // res.status(201).send(user);
+    //}).catch((e) => {
+       // res.status(400).send(e);
+   // })
+//})
 
+//create a new student using async await
+app.post('/students', async(req, res) => {
+    try{
+    const user = new Student(req.body);
+     const createpromise= await user.save(); 
+        res.status(201).send(createpromise);
 
-
-app.get('/contact', (req, res) => {
-    res.send(`Hello Contact world from the server`);
-});
-
-app.get('/signin', (req, res) => {
-    res.send(`Hello Login world from the server`);
-});
-
-app.get('/signup', (req, res) => {
-    res.send(`Hello Registration world from the server`);
-});
+    }catch(e){ res.status(400).send(e);}
+})
 
 app.listen(port, () => {
     console.log(`server is runnig at port no ${port}`);
